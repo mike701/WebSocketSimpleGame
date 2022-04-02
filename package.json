@@ -1,0 +1,19 @@
+{
+  "name": "ballgame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Michael Abebe",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "uuid": "^8.3.2",
+    "websocket": "^1.0.34",
+    "ws": "^8.5.0"
+  }
+}
