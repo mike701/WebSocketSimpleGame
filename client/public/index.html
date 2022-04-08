@@ -28,101 +28,101 @@
   </head>
   <body>
     <h1>Hello Gamers</h1>
-    <button id="start">Start New Game</button>
+    <!-- <button id="start">Start New Game</button>
     <button id="join">Join A Game</button>
     <input type="text" id="joinGame"/>
     <canvas id="myCanvas" width="300" height="150" style="border:1px solid #d3d3d3;">
     </canvas>
     <button id="moveBackward">Back</button>
-    <button id="moveForward">Forward</button>
+    <button id="moveForward">Forward</button> -->
     <script>
-      let clientId=null;
-      let ws=new WebSocket('ws://localhost:3000');
-      const c = document.getElementById("myCanvas");
-      const rectangleForward = document.getElementById("moveForward");
-      const rectangleBackward = document.getElementById("moveBackward");
-      const start = document.getElementById("start");
-      const join = document.getElementById("join");
-      const ctx = c.getContext("2d"); 
+      // let clientId=null;
+      // let ws=new WebSocket('ws://localhost:3000');
+      // const c = document.getElementById("myCanvas");
+      // const rectangleForward = document.getElementById("moveForward");
+      // const rectangleBackward = document.getElementById("moveBackward");
+      // const start = document.getElementById("start");
+      // const join = document.getElementById("join");
+      // const ctx = c.getContext("2d"); 
   
-      function moving(startingPoint){
-        ctx.clearRect(0, 0, c.width, c.height);
-        const payLoad={
-          "method":"update",
-          "clientId":clientId,
-          "gameId":gameId,
-          "Position":startingPoint,
-        }
-        ws.send(JSON.stringify(payLoad))
+      // function moving(startingPoint){
+      //   ctx.clearRect(0, 0, c.width, c.height);
+      //   const payLoad={
+      //     "method":"update",
+      //     "clientId":clientId,
+      //     "gameId":gameId,
+      //     "Position":startingPoint,
+      //   }
+      //   ws.send(JSON.stringify(payLoad))
    
-      }
-      let startingPoint
-      rectangleForward.addEventListener("click",(e)=>{e.preventDefault(),moving(startingPoint+=10)})
-      rectangleBackward.addEventListener("click",(e)=>{e.preventDefault(),moving(startingPoint-=10)})
-      start.addEventListener('click',(e)=>{
-        e.preventDefault();
-        console.log("starting game");
-        const payLoad={
-          "method": "create",
-          "clientId":clientId
-        }
-        ws.send(JSON.stringify(payLoad));
-      })
-      join.addEventListener('click',(e)=>{
-        e.preventDefault();
-        console.log("Joining game");
-        let joinId=document.getElementById('joinGame')
-        // console.log(joinId.value)
-        ctx.clearRect(0, 0, c.width, c.height);
-        // console.log("starting",startingPoint)
-        const payLoad={
-          "method":"join",
-          "clientId":clientId,
-          "gameId":joinId.value,
-        }
-        console.log(payLoad)
-        ws.send(JSON.stringify(payLoad));
-      })
+      // }
+      // let startingPoint
+      // rectangleForward.addEventListener("click",(e)=>{e.preventDefault(),moving(startingPoint+=10)})
+      // rectangleBackward.addEventListener("click",(e)=>{e.preventDefault(),moving(startingPoint-=10)})
+      // start.addEventListener('click',(e)=>{
+      //   e.preventDefault();
+      //   console.log("starting game");
+      //   const payLoad={
+      //     "method": "create",
+      //     "clientId":clientId
+      //   }
+      //   ws.send(JSON.stringify(payLoad));
+      // })
+      // join.addEventListener('click',(e)=>{
+      //   e.preventDefault();
+      //   console.log("Joining game");
+      //   let joinId=document.getElementById('joinGame')
+      //   // console.log(joinId.value)
+      //   ctx.clearRect(0, 0, c.width, c.height);
+      //   // console.log("starting",startingPoint)
+      //   const payLoad={
+      //     "method":"join",
+      //     "clientId":clientId,
+      //     "gameId":joinId.value,
+      //   }
+      //   console.log(payLoad)
+      //   ws.send(JSON.stringify(payLoad));
+      // })
       
   
-      ws.onmessage = message => {            //message.data
-              const response = JSON.parse(message.data);
-              //connect
-              if (response.method === "connect"){
-                  clientId = response.clientId;
-                  console.log("Client id Set successfully " + clientId)
-              }
+      // ws.onmessage = message => {            //message.data
+      //         const response = JSON.parse(message.data);
+      //         //connect
+      //         if (response.method === "connect"){
+      //             clientId = response.clientId;
+      //             console.log("Client id Set successfully " + clientId)
+      //         }
   
-              //create
-              if (response.method === "create"){
-                  console.log(response)
-                  gameId = response.game.id;
+      //         //create
+      //         if (response.method === "create"){
+      //             console.log(response)
+      //             gameId = response.game.id;
   
-                  startingPoint=response.game.Position;
-                  ctx.clearRect(0, 0, c.width, c.height);
-                  ctx.beginPath();
-                  ctx.rect(startingPoint, 20, 150, 100);
-                  ctx.stroke();
-              }
-              if (response.method === "update"){
-                  console.log(response)
-                  gameId = response.game.id;
-                  startingPoint=response.game.Position;
-                  ctx.clearRect(0, 0, c.width, c.height);
-                  ctx.beginPath();
-                  ctx.rect(startingPoint, 20, 150, 100);
-                  ctx.stroke();
-              }
-              if(response.method=="join"){
-                console.log("join",response)
-                gameId = response.game.id;
-                startingPoint=response.game.Position;
-                ctx.clearRect(0, 0, c.width, c.height);
-                ctx.beginPath();
-                ctx.rect(startingPoint, 20, 150, 100);
-                ctx.stroke();
-              }
-       }
+      //             startingPoint=response.game.Position;
+      //             ctx.clearRect(0, 0, c.width, c.height);
+      //             ctx.beginPath();
+      //             ctx.rect(startingPoint, 20, 150, 100);
+      //             ctx.stroke();
+      //         }
+      //         if (response.method === "update"){
+      //             console.log(response)
+      //             gameId = response.game.id;
+      //             startingPoint=response.game.Position;
+      //             ctx.clearRect(0, 0, c.width, c.height);
+      //             ctx.beginPath();
+      //             ctx.rect(startingPoint, 20, 150, 100);
+      //             ctx.stroke();
+      //         }
+      //         if(response.method=="join"){
+      //           console.log("join",response)
+      //           gameId = response.game.id;
+      //           startingPoint=response.game.Position;
+      //           ctx.clearRect(0, 0, c.width, c.height);
+      //           ctx.beginPath();
+      //           ctx.rect(startingPoint, 20, 150, 100);
+      //           ctx.stroke();
+      //         }
+      //  }
       </script>
     <div id="root"></div>
     

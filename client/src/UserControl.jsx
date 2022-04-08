@@ -33,7 +33,6 @@ export function UserControl(props) {
   let pos = props.avatar.map((a, i) => {
     return i === 1 ? a += 12 : i===2? a-=10 : null
   });
-  console.log(pos);
   const [ref, api] = useSphere(() => ({ mass: 1, type: "Dynamic", position: [...pos], rotation:[-Math.PI / 2,0,0],...props } ))
   const { forward, backward, right, left, jump } = PlayerControls()
   const { camera } = useThree();

@@ -1,20 +1,124 @@
-import logo from './logo.svg';
 import './App.css';
 import Environment from './Environment';
-import { Suspense } from 'react';
-import React, { useLayoutEffect } from 'react'
-import { Canvas, useLoader } from '@react-three/fiber'
-import { PointerLockControls, Sky, Text, useFBX, useGLTF, useNormalTexture} from "@react-three/drei";
-import { usePlane } from "@react-three/cannon";
-import { Physics } from '@react-three/cannon';
-import * as THREE from "three";
+import { Suspense, useState } from 'react';
+import React from 'react'
+import { newGame } from './GameClass.mjs';
+
 function App() {
+  const [gameFlag, setGameFlag] = useState(false)
+  const [game,setGame]=useState(null)
+  let clientId = null;
+  let gameId = null;
+  // let Game;
+  let ws=new WebSocket('ws://localhost:3000');
+  // const c = document.getElementById("myCanvas");
+  const rectangleForward = document.getElementById("moveForward");
+  const rectangleBackward = document.getElementById("moveBackward");
+  // const start = document.getElementById("start");
+  // const join = document.getElementById("join");
+  // const ctx = c.getContext("2d"); 
+
+  function moving(startingPoint){
+    // ctx.clearRect(0, 0, c.width, c.height);
+    const payLoad={
+      "method":"update",
+      "clientId":clientId,
+      "gameId":gameId,
+      "Position":startingPoint,
+    }
+    ws.send(JSON.stringify(payLoad))
+  }
+  let startingPoint
+  // rectangleForward.addEventListener("click", (e) => {
+  //   e.preventDefault();
+  //   moving(startingPoint += 10);
+  // })
+  // rectangleBackward.addEventListener("click", (e) => {
+  //   e.preventDefault();
+  //   moving(startingPoint -= 10);
+  // })
+  function startGame(e) {
+    e.preventDefault();
+    console.log("starting game");
+    const payLoad={
+      "method": "create",
+      "clientId":clientId
+    }
+    ws.send(JSON.stringify(payLoad));
+  }
+  function joinGame(e){
+    e.preventDefault();
+    console.log("Joining game");
+    let joinId=document.getElementById('joinGame')
+    // console.log(joinId.value)
+    // ctx.clearRect(0, 0, c.width, c.height);
+    // console.log("starting",startingPoint)
+    const payLoad={
+      "method":"join",
+      "clientId":clientId,
+      "gameId":joinId.value,
+    }
+    console.log(payLoad)
+    ws.send(JSON.stringify(payLoad));
+  }
+  
+
+  ws.onmessage = message => {            //message.data
+          const response = JSON.parse(message.data);
+          //connect
+          if (response.method === "connect"){
+              clientId = response.clientId;
+              console.log("Client id Set successfully " + clientId)
+          }
+
+          //create
+          if (response.method === "create"){
+            console.log(response)
+            gameId = response.game.id;
+            setGame(new newGame(gameId));
+            setGameFlag(true);
+            console.log(game, gameFlag);
+            // Game.onStart();
+              startingPoint=response.game.Position;
+              // ctx.clearRect(0, 0, c.width, c.height);
+              // ctx.beginPath();
+              // ctx.rect(startingPoint, 20, 150, 100);
+              // ctx.stroke();
+          }
+          if (response.method === "update"){
+              console.log(response)
+              gameId = response.game.id;
+              startingPoint=response.game.Position;
+              // ctx.clearRect(0, 0, c.width, c.height);
+              // ctx.beginPath();
+              // ctx.rect(startingPoint, 20, 150, 100);
+              // ctx.stroke();
+          }
+          if(response.method==="join"){
+            console.log("join",response)
+            gameId = response.game.id;
+            startingPoint=response.game.Position;
+            // ctx.clearRect(0, 0, c.width, c.height);
+            // ctx.beginPath();
+            // ctx.rect(startingPoint, 20, 150, 100);
+            // ctx.stroke();
+          }
+   }
   return (
     <div className="App">
       <>
-          <div/>
-          <Suspense fallback={<h1>Hello</h1>} style={{ position: "absolute", top: "0vh" }}>
-          <Environment></Environment>
+        <div style={{padding:"5vh"}}>
+          <button onClick={(e) => { startGame(e); }}>Start New Game</button>
+          <button onClick={(e) => { joinGame(e); }}>Join A Game</button>
+          <input type="text" id="joinGame"/>
+          <button id="moveBackward">Back</button>
+          <button id="moveForward">Forward</button>
+         </div>
+        <Suspense fallback={<h1>Hello</h1>} style={{ position: "absolute", top: "10vh" }}>
+          {gameFlag && <>
+            {game.onStart()}
+          </>}
+          {/* <Environment></Environment> */}
           </Suspense>
         </>
     </div>
