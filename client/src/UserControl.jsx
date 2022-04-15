@@ -47,7 +47,7 @@ export function UserControl(props) {
     frontVector.set(0, 0, Number(backward) - Number(forward))
     sideVector.set(Number(left) - Number(right), 0, 0)
     direction.subVectors(frontVector, sideVector).normalize().multiplyScalar(SPEED).applyEuler(camera.rotation);
-    speed.fromArray(velocity.current)
+    speed.fromArray(velocity.current);
   })
 
   api.velocity.set(direction.x, velocity.current[1], direction.z)

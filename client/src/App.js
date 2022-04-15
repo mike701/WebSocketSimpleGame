@@ -1,5 +1,4 @@
 import './App.css';
-import Environment from './Environment';
 import { Suspense, useState } from 'react';
 import React from 'react'
 import { newGame } from './GameClass.mjs';
@@ -11,12 +10,9 @@ function App() {
   let gameId = null;
   // let Game;
   let ws=new WebSocket('ws://localhost:3000');
-  // const c = document.getElementById("myCanvas");
   const rectangleForward = document.getElementById("moveForward");
   const rectangleBackward = document.getElementById("moveBackward");
-  // const start = document.getElementById("start");
-  // const join = document.getElementById("join");
-  // const ctx = c.getContext("2d"); 
+
 
   function moving(startingPoint){
     // ctx.clearRect(0, 0, c.width, c.height);
@@ -78,30 +74,17 @@ function App() {
             setGame(new newGame(gameId));
             setGameFlag(true);
             console.log(game, gameFlag);
-            // Game.onStart();
               startingPoint=response.game.Position;
-              // ctx.clearRect(0, 0, c.width, c.height);
-              // ctx.beginPath();
-              // ctx.rect(startingPoint, 20, 150, 100);
-              // ctx.stroke();
           }
           if (response.method === "update"){
               console.log(response)
               gameId = response.game.id;
               startingPoint=response.game.Position;
-              // ctx.clearRect(0, 0, c.width, c.height);
-              // ctx.beginPath();
-              // ctx.rect(startingPoint, 20, 150, 100);
-              // ctx.stroke();
           }
           if(response.method==="join"){
             console.log("join",response)
             gameId = response.game.id;
             startingPoint=response.game.Position;
-            // ctx.clearRect(0, 0, c.width, c.height);
-            // ctx.beginPath();
-            // ctx.rect(startingPoint, 20, 150, 100);
-            // ctx.stroke();
           }
    }
   return (
@@ -118,7 +101,6 @@ function App() {
           {gameFlag && <>
             {game.onStart()}
           </>}
-          {/* <Environment></Environment> */}
           </Suspense>
         </>
     </div>
